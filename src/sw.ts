@@ -9,7 +9,15 @@ import { CacheFirst } from "workbox-strategies";
 declare const self: ServiceWorkerGlobalScope & {
     __WB_MANIFEST: Array<any>;
 };
-
+self.addEventListener('fetch', (event) => {
+    const request = event.request;
+    const url = new URL(request.url);
+    const pathname = url.pathname;
+    if (/^\/api\/.*/.test(pathname)) {
+        event.respondWith(fetch(request));
+        return;
+    }
+});
 clientsClaim();
 self.skipWaiting();
 
